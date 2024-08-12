@@ -1,0 +1,20 @@
+upstream eth-client {
+    # server 172.17.0.6:8545 weight=1;
+    server ${SERVICE_TO_PROXY} weight=1;
+}
+
+server {
+    listen ${LISTEN_PORT};
+    # Declare the custom variables
+    set $custom_request_body "";
+    set $custom_request_headers "";
+
+    access_log /var/log/nginx/access_with_body.json json_combined;
+    # access_log syslog:server=192.168.3.49:1514,tag=nginx collector;
+    access_log syslog:server=${LOG_SERVER_URL},tag=nginx collector;
+
+    location / {
+        proxy_pass http://eth-client;
+        proxy_set_header Host ${SERVICE_TO_PROXY};
+    }
+}
