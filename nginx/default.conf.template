@@ -6,7 +6,7 @@ upstream eth-client {
 server {
     listen ${LISTEN_PORT};
     # Declare the custom variables
-    set $custom_request_body "";
+    set $jrpc_method "";
     set $custom_request_headers "";
 
     access_log /var/log/nginx/access_with_body.json json_combined;

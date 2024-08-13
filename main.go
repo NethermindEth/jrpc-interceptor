@@ -9,7 +9,6 @@ import (
 
 var (
 	debug   bool
-	usePrometheus bool
 )
 
 func receiveSyslog(ch syslog.LogPartsChannel) {
@@ -43,6 +42,7 @@ func main() {
 	var (
 		listenSyslog   string
 		listenHTTP     string
+		usePrometheus bool
 	)
 
 	flag.StringVar(&listenSyslog, "listenSyslog", "0.0.0.0:514", "ip:port to listen for syslog messages")
