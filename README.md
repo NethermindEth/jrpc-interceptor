@@ -64,6 +64,26 @@ go build .
 ./jrpc-interceptor -debug=${LOG_SERVER_DEBUG:-true} -listenSyslog=${LOG_SERVER_URL:-"0.0.0.0:514"} -listenHTTP=${PROMETHEUS_URL:-"0.0.0.0:9100"} -usePrometheus=${USE_PROMETHEUS:-true}
 ```
 
+### Download docker image from github container registry
+
+1. Create a [personal access token ](https://github.com/settings/tokens)(PAT) on github with repo access
+2. Set the PAT as an environment variable
+
+```
+export CR_PAT=<your_pat>
+```
+3. Login to github container registry
+
+```
+echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
+```
+
+4. Download the image
+
+```
+docker pull ghcr.io/NethermindEth/jrpc-interceptor:main
+```
+
 ## Nginx configuration
 All the configuration can be found inside the `nginx` folder.
 
@@ -104,7 +124,7 @@ The interceptor publishes the following metrics:
 - `ngx_request_size_bytes` - the size of the request;
 - `ngx_response_size_bytes` - the size of the response;
 - `ngx_request_duration_seconds` - the time of the request;
-
+```
 For the `ngx_request_duration_seconds` metric, we use `$request_time` value.
 It's the time between the first bytes were read from the client and the log write after the last bytes were sent to the client.
 
