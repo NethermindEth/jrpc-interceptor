@@ -109,3 +109,5 @@ For the `ngx_request_duration_seconds` metric, we use `$request_time` value.
 It's the time between the first bytes were read from the client and the log write after the last bytes were sent to the client.
 
 
+## License
+Json RPC interceptor is a Nethermind free and open-source software licensed under the [Apache 2.0 License](https://github.com/NethermindEth/jrpc-interceptor/blob/main/LICENSE) except 3 files that are licensed under the `Mozilla Public License Version 2.0`. See [Notice](https://github.com/NethermindEth/jrpc-interceptor/blob/main/Notice) file for details.

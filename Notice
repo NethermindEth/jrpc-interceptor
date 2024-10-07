@@ -1,0 +1,9 @@
+Used an idea and modified following files from https://github.com/blind-oracle/nginx-prometheus
+- [main.go](https://github.com/blind-oracle/nginx-prometheus/blob/master/main.go)
+- [prometheus.go](https://github.com/blind-oracle/nginx-prometheus/blob/master/prometheus.go)
+- [parser.go](https://github.com/blind-oracle/nginx-prometheus/blob/master/parser.go)
+
+Original MPL-2.0 License headers are preserved for those files:
+- [main.go](https://github.com/NethermindEth/jrpc-interceptor/blob/main/main.go)
+- [parser.go](https://github.com/NethermindEth/jrpc-interceptor/blob/main/parser.go)
+- [prometheus.go](https://github.com/NethermindEth/jrpc-interceptor/blob/main/prometheus.go)
