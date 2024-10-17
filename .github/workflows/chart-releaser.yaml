@@ -47,7 +47,7 @@ jobs:
       - name: Publish to JFrog Artifactory
         shell: bash
         run: |
-          helm registry login nethermind.jfrog.io --username ${{ secrets.ARTIFACTORY_ANGKOR_USERNAME }} --password ${{ secrets.ARTIFACTORY_ANGKOR_TOKEN_CONTRIBUTOR }}
+          helm registry login nethermind.jfrog.io --username ${{ secrets.ARTIFACTORY_ANGKOR_USERNAME }} --password ${{ secrets.ARTIFACTORY_ANGKOR_TOKEN_DEVELOPER }}
           for chart in .cr-release-packages/*.tgz; do
             helm push "$chart" oci://nethermind.jfrog.io/angkor-helmoci-local
           done
