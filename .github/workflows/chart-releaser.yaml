@@ -29,12 +29,14 @@ jobs:
 
       - name: Helm Dependencies
         run: |
-          helm dependency update helm-chart
+          for dir in charts/*; do
+            helm dependency update "$dir";
+          done
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@main
         with:
-          charts_dir: helm-chart
+          charts_dir: charts
           pages_branch: charts-releases
           skip_upload: true
         env:
@@ -45,7 +47,7 @@ jobs:
       - name: Publish to JFrog Artifactory
         shell: bash
         run: |
-          helm registry login nethermind.jfrog.io --username ${{ secrets.ARTIFACTORY_ANGKOR_USERNAME }} --password ${{ secrets.ARTIFACTORY_ANGKOR_TOKEN_DEVELOPER }}
+          helm registry login nethermind.jfrog.io --username ${{ secrets.ARTIFACTORY_ANGKOR_USERNAME }} --password ${{ secrets.ARTIFACTORY_ANGKOR_TOKEN_CONTRIBUTOR }}
           for chart in .cr-release-packages/*.tgz; do
             helm push "$chart" oci://nethermind.jfrog.io/angkor-helmoci-local
           done
