@@ -1,0 +1,10 @@
+{{ define "extra.installation" -}}
+
+## Installation
+
+```bash
+helm repo add nethermind https://nethermindeth.github.io/helm-charts
+helm install {{ template "chart.name" . }} nethermind/{{ template "chart.name" . }}
+```
+
+{{- end }}

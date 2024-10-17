@@ -1,0 +1,9 @@
+apiVersion: v2
+name: jrpc-interceptor
+description: A Helm chart for the JRPC Interceptor application
+type: application
+version: 0.1.0
+appVersion: "main"
+maintainers:
+  - name: Nethermind
+    url: https://nethermind.io

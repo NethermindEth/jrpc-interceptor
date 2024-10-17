@@ -1,0 +1,36 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/nethermindeth/jrpc-interceptor
+  pullPolicy: Always
+  tag: "main"
+
+service:
+  type: ClusterIP
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+host: 0.0.0.0
+
+ports:
+  http: 8081
+  metrics: 9120
+  logServer: 514
+
+env:
+  SERVICE_TO_PROXY: "op-fullnode-op-execution:8545"
+  USE_PROMETHEUS: "true"
+  LOG_SERVER_DEBUG: "true"
+
+serviceMonitor:
+  enabled: true
+  namespace: ""  # If empty, will use the release namespace
+  interval: 15s
+  scrapeTimeout: 10s
+  additionalLabels: {}

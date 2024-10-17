@@ -1,0 +1,51 @@
+name: Helm Charts Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  helm-chart-release:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.12.1
+
+      - name: Helm Dependencies
+        run: |
+          helm dependency update helm-chart
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@main
+        with:
+          charts_dir: helm-chart
+          pages_branch: charts-releases
+          skip_upload: true
+        env:
+          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CR_SKIP_EXISTING: true
+          CR_GENERATE_RELEASE_NOTES: true
+
+      - name: Publish to JFrog Artifactory
+        shell: bash
+        run: |
+          helm registry login nethermind.jfrog.io --username ${{ secrets.ARTIFACTORY_ANGKOR_USERNAME }} --password ${{ secrets.ARTIFACTORY_ANGKOR_TOKEN_CONTRIBUTOR }}
+          for chart in .cr-release-packages/*.tgz; do
+            helm push "$chart" oci://nethermind.jfrog.io/angkor-helmoci-local
+          done

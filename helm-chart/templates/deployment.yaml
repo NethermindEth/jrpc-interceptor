@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "jrpc-interceptor.fullname" . }}
+  labels:
+    {{- include "jrpc-interceptor.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "jrpc-interceptor.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "jrpc-interceptor.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.ports.http }}
+              protocol: TCP
+            - name: metrics
+              containerPort: {{ .Values.ports.metrics }}
+              protocol: TCP
+          env:
+            - name: LISTEN_PORT
+              value: "{{ .Values.host }}:{{ .Values.ports.http }}"
+            - name: SERVICE_TO_PROXY
+              value: {{ .Values.env.SERVICE_TO_PROXY | quote }}
+            - name: LOG_SERVER_URL
+              value: "{{ .Values.host }}:{{ .Values.ports.logServer }}"
+            - name: PROMETHEUS_URL
+              value: "{{ .Values.host }}:{{ .Values.ports.metrics }}"
+            - name: USE_PROMETHEUS
+              value: {{ .Values.env.USE_PROMETHEUS | quote }}
+            - name: LOG_SERVER_DEBUG
+              value: {{ .Values.env.LOG_SERVER_DEBUG | quote }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
