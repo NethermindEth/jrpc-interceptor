@@ -14,14 +14,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
       - name: Run helm-docs
-        run: docker run --rm -v $(pwd):/helm-docs jnorwood/helm-docs:v1.14.2 --chart-search-root=. --template-files=./.github/helm-docs/_templates.gotmpl --template-files=README.md.gotmpl
+        run: docker run --rm -v $(pwd):/helm-docs jnorwood/helm-docs:v1.14.2 --chart-search-root=charts --template-files=./.github/helm-docs/_templates.gotmpl --template-files=README.md.gotmpl
 
       - name: Commit & Push changes
         uses: actions-js/push@master
