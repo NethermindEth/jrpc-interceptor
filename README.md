@@ -18,16 +18,9 @@ docker build -t jrpc-interceptor .
 ```
 2. Run your JRPC app, e.g.:
 ```bash
-docker run -p 8545:8545 -it horax/erigon:latest bash
+docker run --net=host -it nethermindeth/nethermind:latest
 ```
 3. Run the interceptor:
-On MacOS:
-```bash
-docker run -p 514:514/udp -p 9100:9100 -e LISTEN_PORT=80 -e SERVICE_TO_PROXY=192.168.1.2:8545 -e LOG_SERVER_URL=0.0.0.0:514 -p 8081:80 jrpc-interceptor
-```
-Where `192.168.1.2` is the IP of the JRPC app.
-
-On Linux:
 ```bash
 docker run --net="host" -e LISTEN_PORT=0.0.0.0:8081 -e SERVICE_TO_PROXY=0.0.0.0:8545 -e LOG_SERVER_URL=0.0.0.0:514 jrpc-interceptor
 ```
@@ -42,7 +35,7 @@ Where:
 
 4. Send requests to the interceptor:
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' http://localhost:8081
+curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' http://0.0.0.0:8081
 ```
 5. Check the logs. You should see something like this:
 ```bash

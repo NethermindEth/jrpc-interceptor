@@ -26,6 +26,7 @@ go.work.sum
 
 .DS_Store
 .lh/
+.history/
 .vscode/
 /jrpc-interceptor
 !jrpc-interceptor/
