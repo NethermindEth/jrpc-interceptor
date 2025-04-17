@@ -11,23 +11,22 @@ import (
 
 type logEntry struct {
 	// Tags
-	server        		string
-	scheme        		string
-	method        		string
-	hostname      		string
-	status        		string
-	protocol      		string
-	uri           		string
-	jrpc_method   		string
+	server      string
+	scheme      string
+	method      string
+	hostname    string
+	status      string
+	protocol    string
+	uri         string
+	jrpc_method string
 
 	// Fields
-	clientIP      		net.IP
-	duration    		float64
-	bytesSent   		uint64
-	bytesReceived      	uint64
-	response_duration   float64
+	clientIP          net.IP
+	duration          float64
+	bytesSent         uint64
+	bytesReceived     uint64
+	response_duration float64
 }
-
 
 func parseSyslogMessage(msg format.LogParts) (l *logEntry, err error) {
 	content := msg["content"].(string)
@@ -37,15 +36,21 @@ func parseSyslogMessage(msg format.LogParts) (l *logEntry, err error) {
 		return nil, fmt.Errorf("wrong number of fields in message: %s", content)
 	}
 
+	// Use custom serverName if provided, otherwise use hostname from syslog message
+	server := msg["hostname"].(string)
+	if serverName != "" {
+		server = serverName
+	}
+
 	l = &logEntry{
-		server:        msg["hostname"].(string),
-		scheme:        chunks[1],
-		hostname:      chunks[2],
-		method:        chunks[3],
-		protocol:      chunks[4],
-		uri:           strings.Split(chunks[5], "?")[0],
-		status:        chunks[6],
-		jrpc_method:   chunks[11],
+		server:      server,
+		scheme:      chunks[1],
+		hostname:    chunks[2],
+		method:      chunks[3],
+		protocol:    chunks[4],
+		uri:         strings.Split(chunks[5], "?")[0],
+		status:      chunks[6],
+		jrpc_method: chunks[11],
 	}
 
 	if l.clientIP = net.ParseIP(chunks[0]); l.clientIP == nil {
