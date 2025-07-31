@@ -8,13 +8,14 @@ import (
 )
 
 var (
-	debug   bool
+	debug      bool
+	serverName string
 )
 
 func receiveSyslog(ch syslog.LogPartsChannel) {
 	var (
-		l       *logEntry
-		err     error
+		l   *logEntry
+		err error
 	)
 
 	for msg := range ch {
@@ -40,13 +41,14 @@ func receiveSyslog(ch syslog.LogPartsChannel) {
 
 func main() {
 	var (
-		listenSyslog   string
-		listenHTTP     string
+		listenSyslog  string
+		listenHTTP    string
 		usePrometheus bool
 	)
 
 	flag.StringVar(&listenSyslog, "listenSyslog", "0.0.0.0:514", "ip:port to listen for syslog messages")
 	flag.StringVar(&listenHTTP, "listenHTTP", "0.0.0.0:9100", "ip:port to listen for http requests")
+	flag.StringVar(&serverName, "serverName", "", "Server name to use in Prometheus metrics (leave empty for dynamic hostname)")
 	flag.BoolVar(&usePrometheus, "usePrometheus", true, "Enable posting metrics to Prometheus")
 	flag.BoolVar(&debug, "debug", false, "Enable debug")
 	flag.Parse()
