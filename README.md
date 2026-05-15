@@ -22,7 +22,7 @@ docker run --net=host -it nethermindeth/nethermind:latest
 ```
 3. Run the interceptor:
 ```bash
-docker run --net="host" -e LISTEN_PORT=0.0.0.0:8081 -e SERVICE_TO_PROXY=0.0.0.0:8545 -e LOG_SERVER_URL=0.0.0.0:514 jrpc-interceptor
+docker run --net="host" -e LISTEN_PORT=0.0.0.0:8081 -e SERVICE_TO_PROXY=0.0.0.0:8545 -e LOG_SERVER_URL=0.0.0.0:514 -e SERVER_NAME="" jrpc-interceptor
 ```
 
 Where:
@@ -32,6 +32,7 @@ Where:
 - `PROMETHEUS_URL` - the IP / port of the Prometheus server. Optional, "0.0.0.0:9100" by default.
 - `USE_PROMETHEUS` - whether to publish metrics to Prometheus. Optional, "true" by default.
 - `LOG_SERVER_DEBUG` - whether to print the logs to stdout. Optional, "true" by default.
+- `SERVER_NAME` - name to use for the `server` tag in Prometheus metrics. Optional, empty by default (uses dynamic hostname from syslog messages).
 
 4. Send requests to the interceptor:
 ```bash
@@ -54,8 +55,15 @@ go build .
 ```
 3. Run the interceptor:
 ```bash
-./jrpc-interceptor -debug=${LOG_SERVER_DEBUG:-true} -listenSyslog=${LOG_SERVER_URL:-"0.0.0.0:514"} -listenHTTP=${PROMETHEUS_URL:-"0.0.0.0:9100"} -usePrometheus=${USE_PROMETHEUS:-true}
+./jrpc-interceptor -debug=${LOG_SERVER_DEBUG:-true} -listenSyslog=${LOG_SERVER_URL:-"0.0.0.0:514"} -listenHTTP=${PROMETHEUS_URL:-"0.0.0.0:9100"} -usePrometheus=${USE_PROMETHEUS:-true} -serverName=${SERVER_NAME:-""}
 ```
+
+The following command-line flags are available:
+- `-debug` - whether to print the logs to stdout. Optional, `false` by default.
+- `-listenSyslog` - the IP / port of the syslog server. Optional, `0.0.0.0:514` by default.
+- `-listenHTTP` - the IP / port of the Prometheus server. Optional, `0.0.0.0:9100` by default.
+- `-usePrometheus` - whether to publish metrics to Prometheus. Optional, `true` by default.
+- `-serverName` - name to use for the `server` tag in Prometheus metrics. When empty (default), the hostname from each syslog message is used. Set this when you want to override the default hostname with a custom name.
 
 ### Download docker image from github container registry
 
